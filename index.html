@@ -70,6 +70,72 @@
             text-transform: uppercase;
             letter-spacing: 2px;
         }
+
+        .user-menu {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        .menu-toggle {
+            background: var(--salmon);
+            border: 3px solid var(--border);
+            padding: 10px 15px;
+            font-family: inherit;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        
+        .menu-toggle:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px var(--border);
+        }
+        
+        .menu-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: var(--bg);
+            border: 3px solid var(--border);
+            min-width: 200px;
+            display: none;
+            margin-top: 5px;
+        }
+        
+        .menu-dropdown.show {
+            display: block;
+        }
+        
+        .menu-item {
+            padding: 12px 15px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            border-bottom: 1px solid var(--gray);
+            transition: background 0.2s ease;
+        }
+        
+        .menu-item:hover {
+            background: var(--salmon-light);
+        }
+        
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+        
+        .menu-separator {
+            height: 1px;
+            background: var(--border);
+            margin: 5px 0;
+        }
+        
+        .menu-item.logout {
+            color: var(--salmon-dark);
+        }
         
         .subtitle {
             font-size: 1.1em;
@@ -429,6 +495,19 @@
                 <h1>📍 Where is Dr. Tripathi?</h1>
                 <p class="subtitle">Live location tracking from Google Calendar</p>
             </header>
+
+            <div class="user-menu">
+                <button class="menu-toggle" id="menuToggle">
+                    <span id="currentUserName">Dr. Tripathi</span> ▼
+                </button>
+                <div class="menu-dropdown" id="menuDropdown">
+                    <div class="menu-item" data-person="Dr. Tripathi">📍 Dr. Tripathi</div>
+                    <div class="menu-item" data-person="Katie Whitehead">📍 Katie Whitehead</div>
+                    <div class="menu-item" data-person="Dhruv Gada">📍 Dhruv Gada</div>
+                    <div class="menu-separator"></div>
+                    <div class="menu-item logout" onclick="logout()">🚪 Logout</div>
+                </div>
+            </div>
             
             <div class="status-card">
                 <div class="status-label">Current Status</div>
