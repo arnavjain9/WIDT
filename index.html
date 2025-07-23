@@ -21,6 +21,7 @@
             --text: #2D2D2D;
             --border: #2D2D2D;
             --gray: #F5F5F5;
+            --error: #E55B4F;
         }
         
         body {
@@ -452,6 +453,8 @@
 
     <script>
 
+        const SESSION_KEY = 'widt_auth';
+
         // Authentication functions
         function checkAuth() {
             const isAuthenticated = sessionStorage.getItem(SESSION_KEY) === 'true';
@@ -493,6 +496,10 @@
               body: JSON.stringify({ password })
             });
             
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            
             const result = await response.json();
             
             if (result.success) {
@@ -527,8 +534,9 @@
             loginBtn.disabled = true;
             
             // Simulate network delay for better UX
-            setTimeout(() => {
-                if (login(password)) {
+            setTimeout(async () => {
+                const success = await login(password);
+                if (success) {
                     loginBtn.textContent = '✅ Access Granted';
                     errorMessage.classList.remove('show');
                 } else {
