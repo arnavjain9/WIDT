@@ -560,7 +560,7 @@
             document.body.style.minHeight = 'unset';
             
             // Initialize the main app
-            fetchSchedule();
+            fetchAvailableUsers(); // Changed from fetchSchedule()
         }
         
         async function login(password) {
@@ -635,7 +635,60 @@
 
 
         // Menu toggle functionality
+        let availableUsers = [];
         let currentPerson = 'tripathi';
+
+        async function fetchAvailableUsers() {
+            try {
+                const response = await fetch('/api/users');
+                const data = await response.json();
+                availableUsers = data.users;
+                
+                // Set the first available user as current
+                if (availableUsers.length > 0) {
+                    currentPerson = availableUsers[0].id;
+                }
+                
+                populateUserMenu();
+                
+            } catch (error) {
+                console.error('Error fetching users:', error);
+                // Fallback to default
+                currentPerson = 'tripathi';
+            }
+        }
+        
+        function populateUserMenu() {
+            const dropdown = document.getElementById('menuDropdown');
+            const separator = dropdown.querySelector('.menu-separator');
+            
+            // Clear existing user menu items
+            const existingItems = dropdown.querySelectorAll('.menu-item[data-person]');
+            existingItems.forEach(item => item.remove());
+            
+            // Add menu items for each user with a token
+            availableUsers.forEach(user => {
+                const menuItem = document.createElement('div');
+                menuItem.className = 'menu-item';
+                menuItem.setAttribute('data-person', user.id);
+                menuItem.textContent = `📍 ${user.name}`;
+                menuItem.addEventListener('click', function() {
+                    switchPerson(user.id);
+                    dropdown.classList.remove('show');
+                });
+                
+                dropdown.insertBefore(menuItem, separator);
+            });
+            
+            // Update current user display
+            if (currentPerson) {
+                const currentUser = availableUsers.find(u => u.id === currentPerson);
+                if (currentUser) {
+                    document.getElementById('currentUserName').textContent = currentUser.name;
+                    document.querySelector('.header h1').textContent = `📍 Where is ${currentUser.name}?`;
+                }
+            }
+        }
         
         document.getElementById('menuToggle').addEventListener('click', function() {
             const dropdown = document.getElementById('menuDropdown');
@@ -661,20 +714,12 @@
         function switchPerson(person) {
             currentPerson = person;
             
-            // Update the menu button text
-            const personNames = {
-                'tripathi': 'Dr. Tripathi',
-                'smith': 'Dr. Smith',
-                'johnson': 'Dr. Johnson'
-            };
-            
-            document.getElementById('currentUserName').textContent = personNames[person];
-            
-            // Update the page title
-            document.querySelector('.header h1').textContent = `📍 Where is ${personNames[person]}?`;
-            
-            // Refresh the schedule for the new person
-            fetchSchedule();
+            const user = availableUsers.find(u => u.id === person);
+            if (user) {
+                document.getElementById('currentUserName').textContent = user.name;
+                document.querySelector('.header h1').textContent = `📍 Where is ${user.name}?`;
+                fetchSchedule();
+            }
         }
 
 
