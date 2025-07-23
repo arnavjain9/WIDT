@@ -52,14 +52,14 @@ export default async function handler(req, res) {
 function formatEventTime(event) {
   const start = new Date(event.start.dateTime || event.start.date);
   const end = new Date(event.end.dateTime || event.end.date);
-
+  
   const options = { 
     hour: 'numeric', 
     minute: '2-digit',
     timeZone: 'America/New_York'
   };
   
-  return `${start.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })} - ${end.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}`;
+  return `${start.toLocaleTimeString('en-US', options)} - ${end.toLocaleTimeString('en-US', options)}`;
 }
 
 function isCurrentEvent(event) {
