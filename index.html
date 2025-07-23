@@ -412,6 +412,170 @@
             opacity: 0.6;
             font-size: 0.9em;
         }
+
+        /*         TEST */
+        .bulletin-board {
+            margin-top: 40px;
+            background: var(--gray);
+            border: 4px solid var(--border);
+            padding: 25px;
+        }
+        
+        .bulletin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border);
+        }
+        
+        .bulletin-title {
+            font-size: 1.4em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .add-sticky-btn {
+            background: var(--salmon);
+            border: 3px solid var(--border);
+            padding: 8px 16px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .add-sticky-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px var(--border);
+        }
+        
+        .sticky-form {
+            background: var(--bg);
+            border: 3px solid var(--border);
+            padding: 20px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .sticky-form.show {
+            display: block;
+        }
+        
+        .sticky-input {
+            width: 100%;
+            padding: 12px;
+            font-family: inherit;
+            font-size: 1em;
+            border: 2px solid var(--border);
+            background: var(--bg);
+            resize: vertical;
+            min-height: 80px;
+            margin-bottom: 15px;
+        }
+        
+        .sticky-submit {
+            background: var(--salmon);
+            border: 3px solid var(--border);
+            padding: 10px 20px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        
+        .sticky-cancel {
+            background: var(--gray);
+            border: 3px solid var(--border);
+            padding: 10px 20px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        
+        .stickies-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .sticky-note {
+            background: #FFFF88;
+            border: 3px solid var(--border);
+            padding: 15px;
+            position: relative;
+            transition: all 0.2s ease;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .sticky-note:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        .sticky-note.owner {
+            background: var(--salmon-light);
+            border-width: 4px;
+            transform: scale(1.02);
+        }
+        
+        .sticky-note.guest {
+            background: #F0F0F0;
+            opacity: 0.8;
+            transform: scale(0.98);
+        }
+        
+        .sticky-author {
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .sticky-note.owner .sticky-author {
+            color: var(--salmon-dark);
+            opacity: 1;
+        }
+        
+        .sticky-content {
+            font-size: 0.95em;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+        
+        .sticky-time {
+            font-size: 0.75em;
+            opacity: 0.6;
+            text-align: right;
+        }
+        
+        .sticky-delete {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--error);
+            color: white;
+            border: 2px solid var(--border);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            font-size: 0.8em;
+            cursor: pointer;
+            display: none;
+        }
+        
+        .sticky-note:hover .sticky-delete {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /*         END OF TEST */
         
         /* Main content styles (hidden initially) */
         .main-content {
@@ -519,8 +683,45 @@
             </div>
             
             <button class="refresh-btn" onclick="refreshSchedule()">
-                🔄 Refresh Schedule
+                Refresh
             </button>
+
+            <div class="bulletin-board">
+                <div class="bulletin-header">
+                    <h2 class="bulletin-title">📌 Bulletin Board</h2>
+                    <button class="add-sticky-btn" onclick="toggleStickyForm()">+ Add Sticky</button>
+                </div>
+                
+                <div class="sticky-form" id="stickyForm">
+                    <textarea class="sticky-input" id="stickyInput" placeholder="Leave a note for Dr. Tripathi..."></textarea>
+                    <button class="sticky-submit" onclick="submitSticky()">📌 Post Sticky</button>
+                    <button class="sticky-cancel" onclick="toggleStickyForm()">Cancel</button>
+                </div>
+                
+                <div class="stickies-container" id="stickiesContainer">
+                    <!-- Sample stickies for demonstration -->
+                    <div class="sticky-note owner">
+                        <div class="sticky-author">Dr. Tripathi</div>
+                        <div class="sticky-content">Office hours moved to 3-5 PM today due to department meeting.</div>
+                        <div class="sticky-time">2 hours ago</div>
+                        <button class="sticky-delete">×</button>
+                    </div>
+                    
+                    <div class="sticky-note guest">
+                        <div class="sticky-author">Anonymous Student</div>
+                        <div class="sticky-content">Quick question about the homework deadline - is it still Friday?</div>
+                        <div class="sticky-time">4 hours ago</div>
+                        <button class="sticky-delete">×</button>
+                    </div>
+                    
+                    <div class="sticky-note guest">
+                        <div class="sticky-author">TA Mike</div>
+                        <div class="sticky-content">Lab equipment for tomorrow's session is ready in Room 205.</div>
+                        <div class="sticky-time">1 day ago</div>
+                        <button class="sticky-delete">×</button>
+                    </div>
+                </div>
+            </div>
             
             <footer class="footer">
                 <span>Made with ❤️ by the Tripathi Labratory @ Brown</span>
