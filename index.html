@@ -875,7 +875,7 @@
                 const menuItem = document.createElement('div');
                 menuItem.className = 'menu-item';
                 menuItem.setAttribute('data-person', user.id);
-                menuItem.textContent = 📍 ${user.name};
+                menuItem.textContent = `📍 ${user.name}`;
                 menuItem.addEventListener('click', function() {
                     switchPerson(user.id);
                     dropdown.classList.remove('show');
@@ -889,7 +889,7 @@
                 const currentUser = availableUsers.find(u => u.id === currentPerson);
                 if (currentUser) {
                     document.getElementById('currentUserName').textContent = currentUser.name;
-                    document.querySelector('.header h1').textContent = 📍 Where is ${currentUser.name}?;
+                    document.querySelector('.header h1').textContent = `📍 Where is ${currentUser.name}?`;
                 }
             }
         }
@@ -921,7 +921,7 @@
             const user = availableUsers.find(u => u.id === person);
             if (user) {
                 document.getElementById('currentUserName').textContent = user.name;
-                document.querySelector('.header h1').textContent = 📍 Where is ${user.name}?;
+                document.querySelector('.header h1').textContent = `📍 Where is ${user.name}?`;
                 fetchSchedule();
             }
         }
@@ -963,14 +963,14 @@
             
             scheduleData.forEach(event => {
                 const eventCard = document.createElement('div');
-                eventCard.className = event-card ${event.current ? 'current' : ''};
+                eventCard.className = `event-card ${event.current ? 'current' : ''}`;
                 
-                eventCard.innerHTML = 
+                eventCard.innerHTML = `
                     ${event.current ? '<div class="current-indicator">NOW</div>' : ''}
                     <div class="event-time">${event.time}</div>
                     <div class="event-title">${event.title}</div>
                     <div class="event-location">${event.location}</div>
-                ;
+                `;
                 
                 grid.appendChild(eventCard);
             });
@@ -979,7 +979,7 @@
             const currentEvent = scheduleData.find(event => event.current);
             if (currentEvent) {
                 document.getElementById('currentLocation').textContent = currentEvent.location;
-                document.getElementById('timeInfo').textContent = ${currentEvent.title} • Until ${currentEvent.time.split(' - ')[1]};
+                document.getElementById('timeInfo').textContent = `${currentEvent.title} • Until ${currentEvent.time.split(' - ')[1]}`;
             } else {
                 document.getElementById('currentLocation').textContent = 'No current event';
                 document.getElementById('timeInfo').textContent = 'Free time';
@@ -987,7 +987,7 @@
         }
         
         async function refreshSchedule() {
-            document.getElementById('lastUpdate').textContent = Last updated: ${new Date().toLocaleTimeString()};
+            document.getElementById('lastUpdate').textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
             
             const btn = document.querySelector('.refresh-btn');
             btn.textContent = '🔄 Refreshing...';
@@ -1003,7 +1003,7 @@
         
         function updateTime() {
             const now = new Date();
-            document.getElementById('lastUpdate').textContent = Last updated: ${now.toLocaleTimeString()};
+            document.getElementById('lastUpdate').textContent = `Last updated: ${now.toLocaleTimeString()}`;
         }
         
         // Initialize
