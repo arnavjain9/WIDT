@@ -1,18 +1,25 @@
 export default function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   const { password } = req.body;
-  const correctPassword = process.env.TRIPATHI_PASSWORD;
-
-  if (password === correctPassword) {
-    res.json({ success: true });
-  } else {
-    res.status(401).json({ success: false, error: 'Invalid password' });
+  
+  try {
+    const users = JSON.parse(process.env.USERS_DATA);
+    const user = users.find(u => u.password === password);
+    
+    if (user) {
+      res.status(200).json({ 
+        success: true, 
+        userType: user.id,
+        userName: user.name
+      });
+    } else {
+      res.status(401).json({ success: false });
+    }
+  } catch (error) {
+    console.error('Error parsing users data:', error);
+    res.status(500).json({ success: false, error: 'Server error' });
   }
 }
