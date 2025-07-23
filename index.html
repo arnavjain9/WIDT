@@ -635,6 +635,54 @@
 
 
 
+
+        // Menu toggle functionality
+        let currentPerson = 'tripathi';
+        
+        document.getElementById('menuToggle').addEventListener('click', function() {
+            const dropdown = document.getElementById('menuDropdown');
+            dropdown.classList.toggle('show');
+        });
+        
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!document.querySelector('.user-menu').contains(e.target)) {
+                document.getElementById('menuDropdown').classList.remove('show');
+            }
+        });
+        
+        // Handle person selection
+        document.querySelectorAll('.menu-item[data-person]').forEach(item => {
+            item.addEventListener('click', function() {
+                const person = this.dataset.person;
+                switchPerson(person);
+                document.getElementById('menuDropdown').classList.remove('show');
+            });
+        });
+        
+        function switchPerson(person) {
+            currentPerson = person;
+            
+            // Update the menu button text
+            const personNames = {
+                'tripathi': 'Dr. Tripathi',
+                'smith': 'Dr. Smith',
+                'johnson': 'Dr. Johnson'
+            };
+            
+            document.getElementById('currentUserName').textContent = personNames[person];
+            
+            // Update the page title
+            document.querySelector('.header h1').textContent = `📍 Where is ${personNames[person]}?`;
+            
+            // Refresh the schedule for the new person
+            fetchSchedule();
+        }
+
+
+
+
+
         
         //OLD CODE
         let scheduleData = [];
