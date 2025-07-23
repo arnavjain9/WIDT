@@ -242,7 +242,7 @@
 
         async function fetchSchedule() {
             try {
-                const response = await fetch('http://localhost:5500/api/calendar');
+                const response = await fetch('/api/calendar');
                 const data = await response.json();
                 scheduleData = data.events;
                 renderSchedule();
