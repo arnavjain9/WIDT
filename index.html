@@ -535,8 +535,10 @@
             
             // Simulate network delay for better UX
             setTimeout(async () => {
-                const success = await login(password);
-                if (success) {
+                const result = await login(password);
+                if (result.success) {
+                    sessionStorage.setItem(SESSION_KEY, 'true');
+                    sessionStorage.setItem('currentUser', JSON.stringify(result));
                     loginBtn.textContent = '✅ Access Granted';
                     errorMessage.classList.remove('show');
                 } else {
