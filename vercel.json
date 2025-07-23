@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/calendar.js": {
+      "runtime": "@vercel/node"
+    }
+  }
+}
