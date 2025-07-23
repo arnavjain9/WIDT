@@ -194,7 +194,166 @@
             opacity: 0.6;
             font-size: 0.9em;
         }
+
+        .login-container {
+            max-width: 400px;
+            width: 100%;
+        }
         
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: var(--salmon);
+            border: 4px solid var(--border);
+            position: relative;
+        }
+        
+        .login-header::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 2px,
+                var(--border) 2px,
+                var(--border) 4px
+            );
+            z-index: -1;
+        }
+        
+        .lock-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        h1 {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .subtitle {
+            font-size: 1em;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+        
+        .login-form {
+            background: var(--gray);
+            border: 4px solid var(--border);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.9em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            opacity: 0.7;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            font-family: inherit;
+            font-size: 1.1em;
+            font-weight: 600;
+            border: 3px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            outline: none;
+            transition: all 0.2s ease;
+        }
+        
+        .form-input:focus {
+            border-color: var(--salmon);
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px var(--border);
+        }
+        
+        .login-btn {
+            width: 100%;
+            background: var(--salmon);
+            border: 3px solid var(--border);
+            padding: 15px 24px;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .login-btn:hover:not(:disabled) {
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px var(--border);
+        }
+        
+        .login-btn:active:not(:disabled) {
+            transform: translate(0px, 0px);
+            box-shadow: 2px 2px 0px var(--border);
+        }
+        
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .error-message {
+            background: var(--error);
+            color: white;
+            border: 3px solid var(--border);
+            padding: 15px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+            animation: shake 0.5s ease-in-out;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            opacity: 0.6;
+            font-size: 0.9em;
+        }
+        
+        /* Main content styles (hidden initially) */
+        .main-content {
+            display: none;
+        }
+        
+        .main-content.show {
+            display: block;
+        }
+        
+        /* Responsive design */   
         @media (max-width: 600px) {
             .container {
                 padding: 10px;
@@ -207,37 +366,186 @@
             .current-location {
                 font-size: 1.5em;
             }
+
+            .login-container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 1.5em;
+            }
+            
+            .login-header {
+                padding: 20px;
+            }
+            
+            .login-form {
+                padding: 20px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header class="header">
-            <h1>📍 Where is Dr. Tripathi?</h1>
-            <p class="subtitle">Live location tracking from Google Calendar</p>
-        </header>
-        
-        <div class="status-card">
-            <div class="status-label">Current Status</div>
-            <div class="current-location" id="currentLocation">Room 314 - Faculty Lounge</div>
-            <div class="time-info" id="timeInfo">Currently in meeting • Until 3:30 PM</div>
-            <div class="time-info" id="lastUpdate">Last updated: Just now</div>
+
+    <div class="login-container" id="loginScreen">
+        <div class="login-header">
+            <span class="lock-icon">🔒</span>
+            <h1>Access Required</h1>
+            <p class="subtitle">Enter password to view Dr. Tripathi's location</p>
         </div>
         
-        <div class="schedule-grid" id="scheduleGrid">
-            <!-- Schedule items will be populated by JavaScript -->
+        <div class="error-message" id="errorMessage">
+            ❌ Incorrect password. Please try again.
         </div>
         
-        <button class="refresh-btn" onclick="refreshSchedule()">
-            🔄 Refresh Schedule
-        </button>
+        <form class="login-form" id="loginForm">
+            <div class="form-group">
+                <label class="form-label" for="password">Password</label>
+                <input 
+                    type="password" 
+                    id="password" 
+                    class="form-input" 
+                    placeholder="Enter your password..."
+                    autocomplete="current-password"
+                >
+            </div>
+            
+            <button type="submit" class="login-btn" id="loginBtn">
+                🔓 Access Dashboard
+            </button>
+        </form>
         
-        <footer class="footer">
-            <span>Made with ❤️ by the Tripathi Labratory @ Brown</span>
-        </footer>
+        <div class="footer">
+            <span>Unauthorized access is prohibited</span>
+        </div>
+    </div>
+
+    <div class="main-content" id="mainContent">
+        <div class="container">
+            <header class="header">
+                <h1>📍 Where is Dr. Tripathi?</h1>
+                <p class="subtitle">Live location tracking from Google Calendar</p>
+            </header>
+            
+            <div class="status-card">
+                <div class="status-label">Current Status</div>
+                <div class="current-location" id="currentLocation">Room 314 - Faculty Lounge</div>
+                <div class="time-info" id="timeInfo">Currently in meeting • Until 3:30 PM</div>
+                <div class="time-info" id="lastUpdate">Last updated: Just now</div>
+            </div>
+            
+            <div class="schedule-grid" id="scheduleGrid">
+                <!-- Schedule items will be populated by JavaScript -->
+            </div>
+            
+            <button class="refresh-btn" onclick="refreshSchedule()">
+                🔄 Refresh Schedule
+            </button>
+            
+            <footer class="footer">
+                <span>Made with ❤️ by the Tripathi Labratory @ Brown</span>
+            </footer>
+        </div>
     </div>
 
     <script>
+
+        // Authentication functions
+        function checkAuth() {
+            const isAuthenticated = sessionStorage.getItem(SESSION_KEY) === 'true';
+            if (isAuthenticated) {
+                showMainContent();
+            } else {
+                showLoginScreen();
+            }
+        }
+        
+        function showLoginScreen() {
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('mainContent').classList.remove('show');
+            document.body.style.display = 'flex';
+            document.body.style.alignItems = 'center';
+            document.body.style.justifyContent = 'center';
+            document.body.style.minHeight = '100vh';
+        }
+        
+        function showMainContent() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainContent').classList.add('show');
+            document.body.style.display = 'block';
+            document.body.style.alignItems = 'unset';
+            document.body.style.justifyContent = 'unset';
+            document.body.style.minHeight = 'unset';
+            
+            // Initialize the main app
+            fetchSchedule();
+        }
+        
+        async function login(password) {
+          try {
+            const response = await fetch('/api/auth', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ password })
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+              sessionStorage.setItem(SESSION_KEY, 'true');
+              showMainContent();
+              return true;
+            }
+            return false;
+          } catch (error) {
+            console.error('Auth error:', error);
+            return false;
+          }
+        }
+        
+        function logout() {
+            sessionStorage.removeItem(SESSION_KEY);
+            showLoginScreen();
+            document.getElementById('password').value = '';
+            document.getElementById('errorMessage').classList.remove('show');
+        }
+        
+        // Login form handling
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            // Show loading state
+            loginBtn.textContent = '🔄 Checking...';
+            loginBtn.disabled = true;
+            
+            // Simulate network delay for better UX
+            setTimeout(() => {
+                if (login(password)) {
+                    loginBtn.textContent = '✅ Access Granted';
+                    errorMessage.classList.remove('show');
+                } else {
+                    loginBtn.textContent = '🔓 Access Dashboard';
+                    loginBtn.disabled = false;
+                    errorMessage.classList.add('show');
+                    document.getElementById('password').value = '';
+                    document.getElementById('password').focus();
+                }
+            }, 500);
+        });
+        
+        // Focus password field on load
+        document.getElementById('password').focus();
+
+
+
+        
+        //OLD CODE
         let scheduleData = [];
 
         async function fetchSchedule() {
@@ -263,6 +571,7 @@
         }
 
         function renderSchedule() {
+            
             const grid = document.getElementById('scheduleGrid');
             grid.innerHTML = '';
             
