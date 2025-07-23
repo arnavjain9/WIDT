@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Where is Dr. Tripathi?</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --salmon: #FA8072;
+            --salmon-light: #FFB6A3;
+            --salmon-dark: #E55B4F;
+            --bg: #FEFEFE;
+            --text: #2D2D2D;
+            --border: #2D2D2D;
+            --gray: #F5F5F5;
+        }
+        
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.4;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: var(--salmon);
+            border: 4px solid var(--border);
+            position: relative;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 2px,
+                var(--border) 2px,
+                var(--border) 4px
+            );
+            z-index: -1;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .subtitle {
+            font-size: 1.1em;
+            font-weight: 400;
+            opacity: 0.8;
+        }
+        
+        .status-card {
+            background: var(--salmon-light);
+            border: 4px solid var(--border);
+            padding: 25px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        .status-label {
+            font-size: 0.9em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            opacity: 0.7;
+        }
+        
+        .current-location {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        
+        .time-info {
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+        
+        .schedule-grid {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .event-card {
+            background: var(--gray);
+            border: 3px solid var(--border);
+            padding: 20px;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .event-card:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px var(--border);
+        }
+        
+        .event-card.current {
+            background: var(--salmon);
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px var(--border);
+        }
+        
+        .event-time {
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--salmon-dark);
+        }
+        
+        .event-card.current .event-time {
+            color: var(--text);
+        }
+        
+        .event-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .event-location {
+            font-size: 1em;
+            opacity: 0.8;
+        }
+        
+        .current-indicator {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--salmon-dark);
+            color: white;
+            padding: 4px 8px;
+            font-size: 0.8em;
+            font-weight: 700;
+            border: 2px solid var(--border);
+        }
+        
+        .refresh-btn {
+            background: var(--salmon);
+            border: 3px solid var(--border);
+            padding: 12px 24px;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.2s ease;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .refresh-btn:hover {
+            transform: translate(-2px, -2px);
+            box-shadow: 4px 4px 0px var(--border);
+        }
+        
+        .refresh-btn:active {
+            transform: translate(0px, 0px);
+            box-shadow: 2px 2px 0px var(--border);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            border-top: 3px solid var(--border);
+            opacity: 0.6;
+            font-size: 0.9em;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .current-location {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>📍 Where is Dr. Tripathi?</h1>
+            <p class="subtitle">Live location tracking from Google Calendar</p>
+        </header>
+        
+        <div class="status-card">
+            <div class="status-label">Current Status</div>
+            <div class="current-location" id="currentLocation">Room 314 - Faculty Lounge</div>
+            <div class="time-info" id="timeInfo">Currently in meeting • Until 3:30 PM</div>
+            <div class="time-info" id="lastUpdate">Last updated: Just now</div>
+        </div>
+        
+        <div class="schedule-grid" id="scheduleGrid">
+            <!-- Schedule items will be populated by JavaScript -->
+        </div>
+        
+        <button class="refresh-btn" onclick="refreshSchedule()">
+            🔄 Refresh Schedule
+        </button>
+        
+        <footer class="footer">
+            <span>Made with ❤️ by the Tripathi Labratory @ Brown Team</span>
+        </footer>
+    </div>
+
+    <script>
+        let scheduleData = [];
+
+        async function fetchSchedule() {
+            try {
+                const response = await fetch('http://localhost:5500/api/calendar');
+                const data = await response.json();
+                scheduleData = data.events;
+                renderSchedule();
+            } catch (error) {
+                console.error('Error fetching schedule:', error);
+                // Fall back to sample data if API fails
+                scheduleData = [
+                    {
+                        time: "9:00 AM - 10:30 AM",
+                        title: "Advanced Algorithms Lecture",
+                        location: "Room 101 - Lecture Hall A",
+                        current: false
+                    },
+                    // ... keep your existing sample data as fallback
+                ];
+                renderSchedule();
+            }
+        }
+
+        function renderSchedule() {
+            const grid = document.getElementById('scheduleGrid');
+            grid.innerHTML = '';
+            
+            scheduleData.forEach(event => {
+                const eventCard = document.createElement('div');
+                eventCard.className = `event-card ${event.current ? 'current' : ''}`;
+                
+                eventCard.innerHTML = `
+                    ${event.current ? '<div class="current-indicator">NOW</div>' : ''}
+                    <div class="event-time">${event.time}</div>
+                    <div class="event-title">${event.title}</div>
+                    <div class="event-location">${event.location}</div>
+                `;
+                
+                grid.appendChild(eventCard);
+            });
+            
+            // Update current status
+            const currentEvent = scheduleData.find(event => event.current);
+            if (currentEvent) {
+                document.getElementById('currentLocation').textContent = currentEvent.location;
+                document.getElementById('timeInfo').textContent = `${currentEvent.title} • Until ${currentEvent.time.split(' - ')[1]}`;
+            } else {
+                document.getElementById('currentLocation').textContent = 'No current event';
+                document.getElementById('timeInfo').textContent = 'Free time';
+            }
+        }
+        
+        async function refreshSchedule() {
+            document.getElementById('lastUpdate').textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
+            
+            const btn = document.querySelector('.refresh-btn');
+            btn.textContent = '🔄 Refreshing...';
+            btn.disabled = true;
+            
+            await fetchSchedule();
+            
+            setTimeout(() => {
+                btn.textContent = '🔄 Refresh Schedule';
+                btn.disabled = false;
+            }, 1000);
+        }
+        
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('lastUpdate').textContent = `Last updated: ${now.toLocaleTimeString()}`;
+        }
+        
+        // Initialize
+        fetchSchedule();
+        
+        // Auto-refresh every 5 minutes
+        setInterval(() => {
+            fetchSchedule();
+        }, 300000);
+        
+        // Update time display every minute
+        setInterval(updateTime, 60000);
+    </script>
+</body>
+</html>
