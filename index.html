@@ -683,7 +683,7 @@
             </div>
             
             <button class="refresh-btn" onclick="refreshSchedule()">
-                Refresh
+                Refresh for Updates
             </button>
 
             <div class="bulletin-board">
@@ -990,13 +990,13 @@
             document.getElementById('lastUpdate').textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
             
             const btn = document.querySelector('.refresh-btn');
-            btn.textContent = '🔄 Refreshing...';
+            btn.textContent = 'Refreshing...';
             btn.disabled = true;
             
             await fetchSchedule();
             
             setTimeout(() => {
-                btn.textContent = '🔄 Refresh Schedule';
+                btn.textContent = 'Refresh for Updates';
                 btn.disabled = false;
             }, 1000);
         }
